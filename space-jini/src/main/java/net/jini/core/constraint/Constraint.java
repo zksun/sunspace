@@ -119,6 +119,10 @@ class Constraint {
         }
     }
 
+    static Class[] reduce(Class[] classes, boolean keepSupers) {
+        return reduce0(classes.clone(), keepSupers);
+    }
+
     private static Principal[] reduce0(Principal[] principals) {
         if (0 == principals.length) {
             throw new IllegalArgumentException("cannot create constraint with no elements");

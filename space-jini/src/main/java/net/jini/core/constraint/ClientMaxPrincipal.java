@@ -2,15 +2,20 @@ package net.jini.core.constraint;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * Created by zksun on 23/01/2017.
  */
 public final class ClientMaxPrincipal implements InvocationConstraint, Serializable {
 
+    private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("principals", Principal[].class, true)
+    };
     private final Principal[] principals;
 
     public ClientMaxPrincipal(Principal principal) {
@@ -28,6 +33,13 @@ public final class ClientMaxPrincipal implements InvocationConstraint, Serializa
         principals = Constraint.reduce(c);
     }
 
+    public Set elements() {
+        return new ArraySet(principals);
+    }
+
+    Principal[] getPrincipals() {
+        return principals;
+    }
 
     @Override
     public int hashCode() {
