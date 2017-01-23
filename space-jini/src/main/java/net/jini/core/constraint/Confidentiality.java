@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by zksun on 23/01/2017.
  */
-public class Confidentiality implements InvocationConstraint, Serializable {
+public final class Confidentiality implements InvocationConstraint, Serializable {
 
     public static final Confidentiality YES = new Confidentiality(true);
     public static final Confidentiality NO = new Confidentiality(false);

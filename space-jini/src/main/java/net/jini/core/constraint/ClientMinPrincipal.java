@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Created by zksun on 23/01/2017.
  */
-public class ClientMinPrincipal implements InvocationConstraint, Serializable {
+public final class ClientMinPrincipal implements InvocationConstraint, Serializable {
     private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("principals", Principal[].class, true)
     };

@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Created by zksun on 23/01/2017.
  */
-public class ClientMinPrincipalType implements InvocationConstraint, Serializable {
+public final class ClientMinPrincipalType implements InvocationConstraint, Serializable {
 
     private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("classes", Class[].class, true)

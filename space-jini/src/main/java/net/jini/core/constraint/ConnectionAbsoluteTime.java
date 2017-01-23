@@ -1,9 +1,11 @@
 package net.jini.core.constraint;
 
+import java.io.Serializable;
+
 /**
  * Created by zksun on 23/01/2017.
  */
-public class ConnectionAbsoluteTime {
+public final class ConnectionAbsoluteTime implements InvocationConstraint, Serializable {
 
     private final long time;
 
