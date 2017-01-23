@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by zksun on 23/01/2017.
  */
-public class DelegationRelativeTime implements RelativeTimeConstraint, Serializable {
+public final class DelegationRelativeTime implements RelativeTimeConstraint, Serializable {
 
     private final long minStart;
     private final long maxStart;

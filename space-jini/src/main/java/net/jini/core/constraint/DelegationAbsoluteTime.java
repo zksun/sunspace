@@ -13,7 +13,7 @@ import java.util.Locale;
 /**
  * Created by zksun on 23/01/2017.
  */
-public class DelegationAbsoluteTime implements InvocationConstraint, Serializable {
+public final class DelegationAbsoluteTime implements InvocationConstraint, Serializable {
     private final long minStart;
     private final long maxStart;
     private final long minStop;
