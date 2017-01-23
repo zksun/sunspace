@@ -6,8 +6,15 @@
     <version>0.0.1</version>
     <modules>
         <module>space-core</module>
-        <module>space-jini</module>
+        <module>space-jini-dl</module>
     </modules>
     <packaging>pom</packaging>
+
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jsk.version>2.2.3</jsk.version>
+    </properties>
+
 
 </project>
