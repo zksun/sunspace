@@ -6,6 +6,7 @@
     <version>0.0.1</version>
     <modules>
         <module>space-core</module>
+        <module>space-jini</module>
     </modules>
     <packaging>pom</packaging>
 
