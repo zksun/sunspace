@@ -7,6 +7,7 @@
     <modules>
         <module>space-core</module>
         <module>space-jini-dl</module>
+        <module>space-jini-platform</module>
     </modules>
     <packaging>pom</packaging>
 
