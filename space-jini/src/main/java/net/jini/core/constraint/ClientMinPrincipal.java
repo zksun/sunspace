@@ -1,5 +1,7 @@
 package net.jini.core.constraint;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.security.Principal;
@@ -39,4 +41,23 @@ public class ClientMinPrincipal implements InvocationConstraint, Serializable {
         return principals;
     }
 
+    @Override
+    public String toString() {
+        return "ClientMinPrincipal" + Constraint.toString(principals);
+    }
+
+    @Override
+    public int hashCode() {
+        return (ClientMinPrincipal.class.hashCode() + Constraint.hash(principals));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof ClientMinPrincipal && Constraint.equal(principals, ((ClientMinPrincipal) obj).principals));
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {
+        objectInputStream.defaultReadObject();
+        Constraint.verify(principals);
+    }
 }
