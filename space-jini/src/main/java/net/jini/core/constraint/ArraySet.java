@@ -27,7 +27,7 @@ public final class ArraySet implements Set {
     }
 
     public boolean contains(Object o) {
-        for (int i = 0; i < this.elements.length; i++) {
+        for (int i = this.elements.length; --i >= 0; ) {
             if (this.elements[i].equals(o)) {
                 return true;
             }
@@ -81,7 +81,13 @@ public final class ArraySet implements Set {
     }
 
     public boolean containsAll(Collection c) {
-        return false;
+        Iterator iter = c.iterator();
+        while (iter.hasNext()) {
+            if (!contains(iter.next())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private final class Iter implements Iterator {
@@ -96,8 +102,8 @@ public final class ArraySet implements Set {
 
 
         public Object next() {
-            if (this.idx < ArraySet.this.elements.length) {
-                return ArraySet.this.elements[this.idx++];
+            if (this.idx < elements.length) {
+                return elements[idx++];
             }
             throw new NoSuchElementException();
         }
