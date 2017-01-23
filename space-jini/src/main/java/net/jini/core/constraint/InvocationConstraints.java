@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Created by zksun on 23/01/2017.
  */
-public class InvocationConstraints implements Serializable {
+public final class InvocationConstraints implements Serializable {
 
     private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("reqs", InvocationConstraint[].class, true),
