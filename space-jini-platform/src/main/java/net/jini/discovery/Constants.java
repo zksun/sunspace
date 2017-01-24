@@ -3,6 +3,7 @@ package net.jini.discovery;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -83,6 +84,30 @@ public class Constants {
         }
 
         return useTcpNoDelay.booleanValue();
+    }
+
+    public static String getHostAddress() {
+        if (!isLocalHostLoaded.getAndSet(true)) {
+            if (logger.isLoggable(Level.FINE)) {
+                logger.fine("---Before local host initialization---");
+            }
+
+            try {
+                InetAddress.getLocalHost();
+            } catch (UnknownHostException e) {
+                if (logger.isLoggable(Level.WARNING)) {
+                    logger.log(Level.WARNING, e.toString(), e);
+                }
+            }
+            if(logger.isLoggable(Level.FINE)){
+                logger.fine("---After local host initialization---");
+            }
+        }
+
+        String value = System.getProperty(HOST_ADDRESS);
+        if(null == value){
+            
+        }
     }
 
     private static enum HostTranslationType {

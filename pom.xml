@@ -8,6 +8,7 @@
         <module>space-core</module>
         <module>space-jini-dl</module>
         <module>space-jini-platform</module>
+        <module>space-x-internal</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -17,5 +18,20 @@
         <jsk.version>2.2.3</jsk.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
 
+            <dependency>
+                <groupId>com.sun.space</groupId>
+                <artifactId>space-x-internal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.sf.trove4j</groupId>
+                <artifactId>trove4j</artifactId>
+                <version>3.0.3</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
