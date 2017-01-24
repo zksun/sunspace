@@ -11,6 +11,9 @@ import java.io.ObjectOutput;
 public abstract class AbstractExternalizable implements Externalizable {
     private static final long serialVersionUID = 1L;
 
+    protected AbstractExternalizable() {
+    }
+
     public void writeExternal(ObjectOutput out) throws IOException {
         this.writeExternalImpl(out);
     }
