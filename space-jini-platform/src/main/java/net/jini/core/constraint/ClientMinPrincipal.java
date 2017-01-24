@@ -1,4 +1,4 @@
-package jini.core.constraint;
+package net.jini.core.constraint;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -11,25 +11,25 @@ import java.util.Set;
 /**
  * Created by zksun on 23/01/2017.
  */
-public final class ClientMaxPrincipal implements InvocationConstraint, Serializable {
-
+public final class ClientMinPrincipal implements InvocationConstraint, Serializable {
     private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("principals", Principal[].class, true)
     };
+
     private final Principal[] principals;
 
-    public ClientMaxPrincipal(Principal principal) {
-        if (null == principal) {
+    public ClientMinPrincipal(Principal p) {
+        if (null == p) {
             throw new NullPointerException("principal cannot be null");
         }
-        this.principals = new Principal[]{principal};
+        principals = new Principal[]{p};
     }
 
-    public ClientMaxPrincipal(Principal[] principals) {
+    public ClientMinPrincipal(Principal[] principals) {
         this.principals = Constraint.reduce(principals);
     }
 
-    public ClientMaxPrincipal(Collection c) {
+    public ClientMinPrincipal(Collection c) {
         principals = Constraint.reduce(c);
     }
 
@@ -42,18 +42,18 @@ public final class ClientMaxPrincipal implements InvocationConstraint, Serializa
     }
 
     @Override
+    public String toString() {
+        return "ClientMinPrincipal" + Constraint.toString(principals);
+    }
+
+    @Override
     public int hashCode() {
-        return (ClientMaxPrincipal.class.hashCode() + Constraint.hash(principals));
+        return (ClientMinPrincipal.class.hashCode() + Constraint.hash(principals));
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof ClientMaxPrincipal && Constraint.equal(principals, ((ClientMaxPrincipal) obj).principals));
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
+        return (obj instanceof ClientMinPrincipal && Constraint.equal(principals, ((ClientMinPrincipal) obj).principals));
     }
 
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {

@@ -1,16 +1,15 @@
-package jini.core.constraint;
+package net.jini.core.constraint;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Set;
 
 /**
  * Created by zksun on 23/01/2017.
  */
-public final class ClientMaxPrincipalType implements InvocationConstraint, Serializable {
+public final class ClientMinPrincipalType implements InvocationConstraint, Serializable {
 
     private static final ObjectStreamField[] serialPersistentFields = {
             new ObjectStreamField("classes", Class[].class, true)
@@ -18,36 +17,32 @@ public final class ClientMaxPrincipalType implements InvocationConstraint, Seria
 
     private final Class[] classes;
 
-    public ClientMaxPrincipalType(Class clazz) {
+    public ClientMinPrincipalType(Class clazz) {
         Constraint.verify(clazz);
         classes = new Class[]{clazz};
     }
 
-    public ClientMaxPrincipalType(Class[] classes) {
-        this.classes = Constraint.reduce(classes, true);
+    public ClientMinPrincipalType(Class[] classes) {
+        this.classes = Constraint.reduce(classes, false);
     }
 
-    public ClientMaxPrincipalType(Collection c) {
-        classes = Constraint.reduce(c, true);
-    }
-
-    public Set elements() {
-        return new ArraySet(classes);
+    public ClientMinPrincipalType(Collection c) {
+        classes = Constraint.reduce(c, false);
     }
 
     @Override
     public int hashCode() {
-        return (ClientMaxPrincipalType.class.hashCode() + Constraint.hash(classes));
+        return (ClientMinPrincipalType.class.hashCode() + Constraint.hash(classes));
     }
 
     @Override
     public boolean equals(Object obj) {
-        return (obj instanceof ClientMaxPrincipalType && Constraint.equal(classes, ((ClientMaxPrincipalType) obj).classes));
+        return (obj instanceof ClientMinPrincipalType && Constraint.equal(classes, ((ClientMinPrincipalType) obj).classes));
     }
 
     @Override
     public String toString() {
-        return "ClientMaxPrincipalType" + Constraint.toString(classes);
+        return "ClientMinPrincipalType" + Constraint.toString(classes);
     }
 
     private void readObject(ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException {

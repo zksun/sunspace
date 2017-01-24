@@ -1,4 +1,4 @@
-package jini.discovery;
+package net.jini.discovery;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

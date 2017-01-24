@@ -1,4 +1,4 @@
-package jini.core.constraint;
+package net.jini.core.constraint;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
