@@ -11,5 +11,10 @@
 
     <artifactId>space-jini-platform</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.space</groupId>
+            <artifactId>space-x-internal</artifactId>
+        </dependency>
+    </dependencies>
 </project>

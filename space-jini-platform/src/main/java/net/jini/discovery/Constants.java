@@ -1,7 +1,14 @@
 package net.jini.discovery;
 
+import com.space.internal.io.BootIOUtils;
+
+import java.net.Inet4Address;
+import java.net.Inet6Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,7 +93,7 @@ public class Constants {
         return useTcpNoDelay.booleanValue();
     }
 
-    public static String getHostAddress() {
+    public static String getHostAddress() throws UnknownHostException {
         if (!isLocalHostLoaded.getAndSet(true)) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("---Before local host initialization---");
@@ -99,18 +106,101 @@ public class Constants {
                     logger.log(Level.WARNING, e.toString(), e);
                 }
             }
-            if(logger.isLoggable(Level.FINE)){
+            if (logger.isLoggable(Level.FINE)) {
                 logger.fine("---After local host initialization---");
             }
         }
 
         String value = System.getProperty(HOST_ADDRESS);
-        if(null == value){
-            
+        if (null == value) {
+            return BootIOUtils.wrapIpv6HostAddressIfNeeded(InetAddress.getLocalHost());
+        } else if (value.startsWith("#") && value.endsWith("#")) {
+            value = translateHostName(value);
+            System.setProperty(HOST_ADDRESS, value);
+            return value;
+        } else {
+            InetAddress inetAddress = InetAddress.getByName(value);
+            if (inetAddress instanceof Inet6Address && value.startsWith("[")) {
+                return value;
+            } else {
+                String hostAddress = inetAddress.getHostAddress();
+                if (value.equalsIgnoreCase(hostAddress)) {
+                    return hostAddress;
+                } else {
+                    String canonicalHostName = inetAddress.getCanonicalHostName();
+                    if (value.equalsIgnoreCase(canonicalHostName)) {
+                        return canonicalHostName;
+                    } else {
+                        if (logger.isLoggable(Level.FINE)) {
+                            logger.fine(">>> RETURN inetAddress:" + inetAddress + ", value=" + value + ", object=" + Integer.toHexString(System.identityHashCode(inetAddress)));
+                        }
+
+                        return inetAddress.getHostName();
+                    }
+                }
+            }
         }
     }
 
-    private static enum HostTranslationType {
+    private static String translateHostName(String value) throws UnknownHostException {
+        value = value.substring(1, value.length() - 1);
+        String name = value.substring(0, value.indexOf(':'));
+        String type = value.substring(value.indexOf(':') + 1);
+        HostTranslationType hostTranslationType = null;
+
+        try {
+            hostTranslationType = HostTranslationType.valueOf(type);
+        } catch (IllegalArgumentException e) {
+            //ignore
+        }
+
+        if ("local".equals(name)) {
+            return translateHost(InetAddress.getLocalHost(), hostTranslationType);
+        }
+
+        Enumeration<NetworkInterface> niEnum = null;
+
+        try {
+            niEnum = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException e) {
+            throw new RuntimeException("Failed to get network interfaces", e);
+        }
+        while (niEnum.hasMoreElements()) {
+            NetworkInterface networkInterface = niEnum.nextElement();
+            if (name.equals(networkInterface.getName()) || name.equals(networkInterface.getDisplayName())) {
+                Enumeration<InetAddress> inetAddressEnumeration = networkInterface.getInetAddresses();
+                while (inetAddressEnumeration.hasMoreElements()) {
+                    InetAddress address = inetAddressEnumeration.nextElement();
+                    if (!(address.getHostAddress().equals("127.0.0.1")) &&
+                            (!(address instanceof Inet6Address) || ((hostTranslationType == HostTranslationType.ip6) && (!address.isLoopbackAddress()))) &&
+                            (!(address instanceof Inet4Address) || (hostTranslationType != HostTranslationType.ip6))) {
+                        return translateHost(address, hostTranslationType);
+                    }
+                }
+            }
+        }
+        throw new RuntimeException("Failed to find network interface for [" + value + "]");
+    }
+
+    private static String translateHost(InetAddress address, HostTranslationType hostTranslationType) {
+        if (null == hostTranslationType) {
+            return BootIOUtils.wrapIpv6HostAddressIfNeeded(address);
+        } else {
+            switch (hostTranslationType) {
+                case ip:
+                    return address.getCanonicalHostName();
+                case ip6:
+                    return address.getHostName();
+                case host:
+                case canonicalhost:
+                    return BootIOUtils.wrapIpv6HostAddressIfNeeded(address);
+                default:
+                    throw new IllegalStateException("Unsupported host type: " + hostTranslationType);
+            }
+        }
+    }
+
+    private enum HostTranslationType {
         ip, ip6, host, canonicalhost;
     }
 
