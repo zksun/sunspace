@@ -1,6 +1,7 @@
 package com.space.internal.io;
 
 import com.space.internal.serialization.IClassSerializer;
+import com.sun.corba.se.impl.encoding.MarshalOutputStream;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
@@ -85,6 +86,11 @@ public class IOUtils {
         } catch (Exception e) {
             throw new IllegalArgumentException("Failed to perform deep clone on [" + object + "] object. Check that the all object context are implements java.io.Serializable ", e);
         }
+    }
+
+    public static void writeUUID(ObjectOutput output, UUID value) throws IOException {
+        output.writeLong(value.getLeastSignificantBits());
+        output.writeLong(value.getMostSignificantBits());
     }
 
     public static UUID readUUID(ObjectInput input) throws IOException {
@@ -297,6 +303,12 @@ public class IOUtils {
         return array;
     }
 
+    public static void writeRepetitiveString(ObjectOutput output, String s) {
+        if (output instanceof MarshalOutputStream) {
+
+        }
+    }
+
     public static void writeString(ObjectOutput output, String s) throws IOException {
         BootIOUtils.writeString(output, s);
     }
@@ -349,7 +361,6 @@ public class IOUtils {
         }
         return set;
     }
-
 
 
 }
