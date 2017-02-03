@@ -20,6 +20,8 @@ public class AnnotatedObjectInputStream extends ObjectInputStream {
         }
 
         String name = classDesc.getName();
+
+
         return null;
 
     }

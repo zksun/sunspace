@@ -1,7 +1,6 @@
 package com.space.internal.io;
 
 import com.space.internal.serialization.IClassSerializer;
-import com.sun.corba.se.impl.encoding.MarshalOutputStream;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 
@@ -303,9 +302,11 @@ public class IOUtils {
         return array;
     }
 
-    public static void writeRepetitiveString(ObjectOutput output, String s) {
+    public static void writeRepetitiveString(ObjectOutput output, String s) throws IOException {
         if (output instanceof MarshalOutputStream) {
-
+            ((MarshalOutputStream) output).writeRe
+        } else {
+            writeString(output, s);
         }
     }
 
